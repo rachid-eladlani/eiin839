@@ -71,6 +71,10 @@ namespace BasicServerHTTPlistener
                 // Obtain a response object.
                 HttpListenerResponse response = context.Response;
 
+                Console.WriteLine();
+                Console.WriteLine(request.Headers);
+
+
                 // Construct a response.
                 string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
                 byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
