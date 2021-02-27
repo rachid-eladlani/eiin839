@@ -1,9 +1,11 @@
-﻿using System;
+﻿using BasicWebServer;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Web;
+using System.Reflection;
 
 namespace BasicServerHTTPlistener
 {
@@ -62,6 +64,11 @@ namespace BasicServerHTTPlistener
                 // Note: The GetContext method blocks while waiting for a request.
                 HttpListenerContext context = listener.GetContext();
                 HttpListenerRequest request = context.Request;
+                Header headers = new Header(request.Headers);
+
+                headers.printAllInfos();
+
+                headers.printHeader("User-Agent");
 
                 string documentContents;
                 using (Stream receiveStream = request.InputStream)
@@ -86,10 +93,20 @@ namespace BasicServerHTTPlistener
                 //get path in url 
                 Console.WriteLine(request.Url.LocalPath);
 
+                string responseString = "";
+
+                Mymethods m = new Mymethods();
                 // parse path in url 
                 foreach (string str in request.Url.Segments)
                 {
                     Console.WriteLine(str);
+                    Type type = typeof(Mymethods);
+                    MethodInfo method = type.GetMethod(str);
+                    if (method != null)
+                    {
+                        Mymethods c = new Mymethods();
+                        responseString = (string)method.Invoke(c, new string[] { HttpUtility.ParseQueryString(request.Url.Query).Get("param1"), HttpUtility.ParseQueryString(request.Url.Query).Get("param2") } );
+                    }
                 }
 
                 //get params un url. After ? and between &
@@ -102,14 +119,12 @@ namespace BasicServerHTTPlistener
                 Console.WriteLine("param3 = " + HttpUtility.ParseQueryString(request.Url.Query).Get("param3"));
                 Console.WriteLine("param4 = " + HttpUtility.ParseQueryString(request.Url.Query).Get("param4"));
 
-                //
                 Console.WriteLine(documentContents);
 
                 // Obtain a response object.
                 HttpListenerResponse response = context.Response;
 
                 // Construct a response.
-                string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
                 byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
                 // Get a response stream and write the response to it.
                 response.ContentLength64 = buffer.Length;

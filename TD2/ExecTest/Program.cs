@@ -2,14 +2,16 @@
 
 namespace ExeTest
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            if (args.Length == 1)
-                Console.WriteLine(args[0]);
+            if (args.Length >= 1)
+            {
+                Console.WriteLine("<HTML><BODY> Hello " + args[0] + " " + args[1] + "</BODY></HTML>");
+            }
             else
-                Console.WriteLine("ExeTest <string parameter>");
+                Console.WriteLine("ExeTest  ");
         }
     }
 }
