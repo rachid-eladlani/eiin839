@@ -22,5 +22,10 @@ namespace BasicWebServer
             Console.WriteLine("----- Header asked :" + header + "-----");
             Console.WriteLine(this.headersCollections.Get(header));
         }
+
+        public System.Collections.Specialized.NameValueCollection getHeaders()
+        {
+            return headersCollections;
+        }
     }
 }

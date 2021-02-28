@@ -1,6 +1,5 @@
 ﻿using BasicWebServer;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -66,10 +65,6 @@ namespace BasicServerHTTPlistener
                 HttpListenerRequest request = context.Request;
                 Header headers = new Header(request.Headers);
 
-                headers.printAllInfos();
-
-                headers.printHeader("User-Agent");
-
                 string documentContents;
                 using (Stream receiveStream = request.InputStream)
                 {
@@ -107,6 +102,28 @@ namespace BasicServerHTTPlistener
                         Mymethods c = new Mymethods();
                         responseString = (string)method.Invoke(c, new string[] { HttpUtility.ParseQueryString(request.Url.Query).Get("param1"), HttpUtility.ParseQueryString(request.Url.Query).Get("param2") } );
                     }
+                }
+
+                /**
+                 * Affichage de tout les headers
+                */
+                headers.printAllInfos();
+
+                /**
+                 * Affichage du user-agent (infos du browser qui fait la requête)
+                */
+                headers.printHeader("User-Agent");
+
+                /**
+                 * Je renvoie une reponse approprié a mon navigateur (peut servir pour la responsivité, voire d'autres)
+                */
+                if (headers.getHeaders().Get("User-Agent").Contains("Mobile"))
+                {
+                    responseString += "<br>Tu es sur un mobile";
+                }
+                else
+                {
+                    responseString += "<br>Tu es sur un ordinateur";
                 }
 
                 //get params un url. After ? and between &
